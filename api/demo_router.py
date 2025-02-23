@@ -2,9 +2,9 @@ import pymupdf
 from fastapi import APIRouter, UploadFile
 from google import genai
 
-from config import app_settings
+from config import ai_settings
 
-gemini_client = genai.Client(api_key=app_settings.gemini_key)
+gemini_client = genai.Client(api_key=ai_settings.GEMINI_KEY)
 
 router = APIRouter()
 

@@ -1,16 +1,21 @@
-import uvicorn
 from fastapi import FastAPI
+from sqlmodel import select
 
-from api import demo_router
-from api import pdf_router
-from api import summarize_router
-from api import summary_router
-from api import download_router
-from api import history_router
-from api import auth_router
-from api import admin_router
+from api import admin_router, auth_router, demo_router, download_router, history_router, pdf_router, summarize_router, summary_router
+from api.user.user import User
+from db.config import create_db_and_tables, SessionDep
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
+
+@app.get("/")
+def root(session: SessionDep):
+    return session.exec(select(User))
+
 app.include_router(demo_router, prefix="/milestone_1")
 app.include_router(pdf_router)
 app.include_router(summarize_router)
