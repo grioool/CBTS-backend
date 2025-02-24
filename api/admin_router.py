@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
+
 @router.get("/admin/analytics")
 def get_admin_analytics():
     return {

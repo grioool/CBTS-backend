@@ -1,7 +1,7 @@
-import pymupdf
 from fastapi import APIRouter, UploadFile
 
 router = APIRouter()
+
 
 @router.post("/upload")
 def upload(file: UploadFile):

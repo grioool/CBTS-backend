@@ -8,6 +8,7 @@ gemini_client = genai.Client(api_key=ai_settings.GEMINI_KEY)
 
 router = APIRouter()
 
+
 @router.post("/demo")
 def summarize_demo(file: UploadFile):
     with pymupdf.open(stream=file.file.read(), filetype="pdf") as doc:
