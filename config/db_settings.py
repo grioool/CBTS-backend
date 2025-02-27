@@ -6,6 +6,7 @@ class DatabaseSettings(BaseSettings):
     DB_PASSWORD: str
     DB_NAME: str
     DB_IP: str
+    GOOGLE_APPLICATION_CREDENTIALS: str
 
     model_config = SettingsConfigDict(env_file=".env", extra="allow")
 
