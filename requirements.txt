@@ -21,8 +21,14 @@ email_validator==2.2.0
 fastapi==0.115.8
 fastapi-cli==0.0.7
 frozenlist==1.5.0
+google-api-core==2.24.1
 google-auth==2.38.0
+google-cloud-core==2.4.2
+google-cloud-storage==3.0.0
+google-crc32c==1.6.0
 google-genai==1.2.0
+google-resumable-media==2.7.2
+googleapis-common-protos==1.68.0
 h11==0.14.0
 httpcore==1.0.7
 httptools==0.6.4
@@ -43,7 +49,10 @@ pathspec==0.12.1
 pg8000==1.31.2
 platformdirs==4.3.6
 propcache==0.3.0
-psycopg2-binary
+proto-plus==1.26.0
+protobuf==5.29.3
+psycopg2==2.9.10
+psycopg2-binary==2.9.10
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
 pycparser==2.22
@@ -78,5 +87,3 @@ uvloop==0.21.0
 watchfiles==1.0.4
 websockets==14.2
 yarl==1.18.3
-
-protobuf~=5.29.3
