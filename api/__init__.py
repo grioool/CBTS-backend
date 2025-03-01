@@ -1,4 +1,3 @@
-from .demo_router import router as demo_router
 from api.summary.summarize_router import router as summarize_router
 from api.summary.summary_router import router as summary_router
 from api.user.history_router import router as history_router
