@@ -1,10 +1,8 @@
-from fastapi import FastAPI
-from sqlmodel import select
+from fastapi import FastAPI, Response
 
 from api import admin_router, auth_router, download_router, history_router, summarize_router, \
     summary_router
-from api.user.user import User
-from db.config import create_db_and_tables, SessionDep
+from db.config import create_db_and_tables
 
 app = FastAPI()
 
@@ -15,8 +13,8 @@ def on_startup():
 
 
 @app.get("/")
-def root(session: SessionDep):
-    return session.exec(select(User))
+def root():
+    return Response()
 
 
 app.include_router(summarize_router)

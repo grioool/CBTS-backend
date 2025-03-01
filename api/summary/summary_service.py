@@ -1,7 +1,6 @@
 import fitz
 from fastapi import UploadFile
 from google import genai
-
 from google.cloud import storage
 
 from config import ai_settings
@@ -19,6 +18,7 @@ def upload_text_to_gcs(text: str, destination_blob_name: str):
     blob = bucket.blob(destination_blob_name)
     blob.upload_from_string(text, content_type='text/plain')
     return blob.public_url
+
 
 async def summarize_pdf(file: UploadFile):
     with fitz.open(stream=file.file.read(), filetype="pdf") as doc:

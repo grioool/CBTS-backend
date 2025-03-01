@@ -1,14 +1,13 @@
-from datetime import datetime
-
 from fastapi import APIRouter, HTTPException
-from google.cloud import storage
 from fastapi.responses import FileResponse
+from google.cloud import storage
 
 storage_client = storage.Client()
 bucket_name = "cbts-bucket"
 bucket = storage_client.bucket(bucket_name)
 
 router = APIRouter()
+
 
 @router.get("/download/{filename}")
 async def download_file(filename: str):
