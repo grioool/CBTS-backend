@@ -1,5 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from google.cloud.storage import bucket
+from google.cloud import storage
+
+storage_client = storage.Client()
+bucket_name = "cbts-bucket"
+bucket = storage_client.bucket(bucket_name)
 
 router = APIRouter()
 
