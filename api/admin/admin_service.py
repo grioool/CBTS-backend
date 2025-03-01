@@ -1,8 +1,8 @@
 from sqlalchemy import func
 from sqlmodel import select
 
-from api.summary.dto.summary import Summary
-from api.user.user import User
+from api.summary.summary import Summary
+from api.user.dto.user import User
 from db.config import SessionDep
 
 

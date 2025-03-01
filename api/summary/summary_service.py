@@ -3,8 +3,8 @@ from fastapi import UploadFile
 from google import genai
 from google.cloud import storage
 
-from api.summary.dto.length import Length
-from api.summary.dto.style import Style
+from api.summary.length import Length
+from api.summary.style import Style
 from config import ai_settings
 
 gemini_client = genai.Client(api_key=ai_settings.GEMINI_KEY)
@@ -27,7 +27,8 @@ async def summarize_pdf(style: Style, length: Length, file: UploadFile):
         text = chr(12).join([page.get_text() for page in doc])
 
     response = gemini_client.models.generate_content(
-        model="gemini-2.0-flash", contents=f"Summarize the following article {text} in the following style: {style} and length: {length}"
+        model="gemini-2.0-flash",
+        contents=f"Summarize the following article {text} in the following style: {style} and length: {length}"
     )
     summary = response.text
 

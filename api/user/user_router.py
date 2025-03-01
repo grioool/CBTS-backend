@@ -1,15 +1,15 @@
 from typing import Annotated
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import HTTPException, Query, APIRouter
 from sqlmodel import select
 
-from api.user.user import User
+from api.user.dto.user import User
 from db.config import SessionDep
 
-app = FastAPI()
+router = APIRouter(prefix='/users')
 
 
-@app.post("/users/")
+@router.post("/")
 def create_user(user: User, session: SessionDep) -> User:
     session.add(user)
     session.commit()
@@ -17,7 +17,7 @@ def create_user(user: User, session: SessionDep) -> User:
     return user
 
 
-@app.get("/users/")
+@router.get("/")
 def read_users(
         session: SessionDep,
         offset: int = 0,
@@ -27,7 +27,7 @@ def read_users(
     return users
 
 
-@app.get("/users/{user_id}")
+@router.get("/{user_id}")
 def read_user(user_id: int, session: SessionDep) -> User:
     user = session.get(User, user_id)
     if not user:
@@ -35,7 +35,7 @@ def read_user(user_id: int, session: SessionDep) -> User:
     return user
 
 
-@app.delete("/users/{user_id}")
+@router.delete("/{user_id}")
 def delete_user(user_id: int, session: SessionDep):
     user = session.get(User, user_id)
     if not user:
