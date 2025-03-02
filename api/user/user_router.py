@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import HTTPException, Query, APIRouter
 from sqlmodel import select
 
-from api.user.dto.user import User
+from api.user.entity.user import User
 from db.config import SessionDep
 
 router = APIRouter(prefix='/users')

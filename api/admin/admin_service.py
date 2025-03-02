@@ -2,7 +2,7 @@ from sqlalchemy import func
 from sqlmodel import select
 
 from api.summary.summary import Summary
-from api.user.dto.user import User
+from api.user.entity.user import User
 from db.config import SessionDep
 
 

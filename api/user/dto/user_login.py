@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel
 
 
-class UserResponse(SQLModel):
+class UserLogin(SQLModel):
     username: str
-    email: str
+    password: str
