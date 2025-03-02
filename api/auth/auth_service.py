@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Annotated
+from typing import Annotated
 
 import jwt
 from fastapi import HTTPException, status, Depends
@@ -18,8 +18,10 @@ from db.config import SessionDep
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
+
 class TokenData(SQLModel):
     username: str | None = None
+
 
 class AuthService:
     def __init__(self, session: SessionDep, user_service: UserServiceDep):
@@ -52,7 +54,6 @@ class AuthService:
         if not self.verify_password(user.password, self.get_password_hash(user.password)):
             return None
         return db_user
-
 
     def create_access_token(self, data: dict, expires_delta: timedelta | None = None):
         to_encode = data.copy()
@@ -99,5 +100,6 @@ class AuthService:
         if user is None:
             raise credentials_exception
         return user
+
 
 AuthServiceDep = Annotated[AuthService, Depends(AuthService)]

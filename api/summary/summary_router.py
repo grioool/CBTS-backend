@@ -1,4 +1,5 @@
 import os
+import tempfile
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Depends, BackgroundTasks
@@ -9,7 +10,6 @@ from api.auth.auth_service import oauth2_scheme
 from api.summary.length import Length
 from api.summary.style import Style
 from api.summary.summary_service import SummaryServiceDep
-import tempfile
 
 storage_client = storage.Client()
 bucket_name = "cbts-bucket"
@@ -19,7 +19,8 @@ router = APIRouter(prefix="/summary")
 
 
 @router.post("/summarize")
-async def summarize_file(length: Length, style: Style, summary_service: SummaryServiceDep, token: Annotated[str, Depends(oauth2_scheme)],  file: UploadFile = File(...)):
+async def summarize_file(length: Length, style: Style, summary_service: SummaryServiceDep,
+                         token: Annotated[str, Depends(oauth2_scheme)], file: UploadFile = File(...)):
     try:
         summary, gcs_path = await summary_service.summarize_pdf(length, style, file, token)
         return {"summary": summary, "file_path": gcs_path}

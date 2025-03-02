@@ -39,6 +39,7 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], auth_servi
     )
     return Token(access_token=access_token, token_type="bearer")
 
+
 @router.post("/refresh")
 def refresh_token(token: Annotated[str, Depends(oauth2_scheme)], auth_service: AuthServiceDep):
     payload = auth_service.decode_access_token(token)

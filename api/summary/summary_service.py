@@ -1,15 +1,13 @@
+import hashlib
 from typing import Annotated
 
 import fitz
-import hashlib
 from fastapi import UploadFile, Depends
 from google import genai
 from google.cloud import storage
-from pydantic.v1.main import generate_hash_function
-from requests import session
 from sqlmodel import select
 
-from api.auth.auth_service import AuthService, AuthServiceDep, oauth2_scheme
+from api.auth.auth_service import AuthServiceDep
 from api.summary.length import Length
 from api.summary.style import Style
 from api.summary.summary import Summary
@@ -26,13 +24,13 @@ bucket = storage_client.bucket(bucket_name)
 def generate_hash(filename: str, length: int = 10):
     return hashlib.sha256(filename.encode()).hexdigest()[:length]
 
+
 class SummaryService:
     def __init__(self, session: SessionDep, auth_service: AuthServiceDep):
         self.session = session
-        self.auth_service=auth_service
+        self.auth_service = auth_service
 
     def upload_text_to_gcs(self, text: str, destination_blob_name: str):
-
         print(list(storage_client.list_buckets()))
 
         blob = bucket.blob(destination_blob_name)
@@ -40,7 +38,6 @@ class SummaryService:
         return blob.public_url
 
     async def summarize_pdf(self, style: Style, length: Length, file: UploadFile, token: str):
-
         with fitz.open(stream=file.file.read(), filetype="pdf") as doc:
             text = chr(12).join([page.get_text() for page in doc])
 
@@ -67,5 +64,6 @@ class SummaryService:
 
     def get_all_user_summaries(self, user_id: int):
         return self.session.exec(select(Summary).where(Summary.user_id == user_id)).all()
+
 
 SummaryServiceDep = Annotated[SummaryService, Depends(SummaryService)]
