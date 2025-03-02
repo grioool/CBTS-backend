@@ -6,6 +6,7 @@ annotated-types==0.7.0
 anyio==4.8.0
 asn1crypto==1.5.1
 attrs==25.1.0
+bcrypt==4.3.0
 black==25.1.0
 cachetools==5.5.2
 certifi==2025.1.31
@@ -45,12 +46,14 @@ mypy-extensions==1.0.0
 openai==1.64.0
 orjson==3.10.15
 packaging==24.2
+passlib==1.7.4
 pathspec==0.12.1
 pg8000==1.31.2
 platformdirs==4.3.6
 propcache==0.3.0
 proto-plus==1.26.0
 protobuf==5.29.3
+psycopg2==2.9.10
 psycopg2-binary==2.9.10
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
@@ -60,6 +63,7 @@ pydantic-extra-types==2.10.2
 pydantic-settings==2.8.0
 pydantic_core==2.27.2
 Pygments==2.19.1
+PyJWT==2.10.1
 PyMuPDF==1.25.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
