@@ -4,8 +4,9 @@ from typing import Optional, Annotated
 import jwt
 from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
+from jwt import InvalidTokenError
 from passlib.context import CryptContext
-from sqlmodel import select
+from sqlmodel import select, SQLModel
 
 from api.user.dto.user_create import UserCreate
 from api.user.dto.user_login import UserLogin
@@ -17,6 +18,8 @@ from db.config import SessionDep
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
+class TokenData(SQLModel):
+    username: str | None = None
 
 class AuthService:
     def __init__(self, session: SessionDep, user_service: UserServiceDep):
@@ -78,5 +81,23 @@ class AuthService:
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
+    async def get_current_user(self, token: Annotated[str, Depends(oauth2_scheme)]):
+        credentials_exception = HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        try:
+            payload = jwt.decode(token, auth_settings.SECRET_KEY, algorithms=[auth_settings.ALGORITHM])
+            username = payload.get("sub")
+            if username is None:
+                raise credentials_exception
+            token_data = TokenData(username=username)
+        except InvalidTokenError:
+            raise credentials_exception
+        user = self.user_service.get_by_username(token_data.username)
+        if user is None:
+            raise credentials_exception
+        return user
 
 AuthServiceDep = Annotated[AuthService, Depends(AuthService)]

@@ -1,24 +1,15 @@
-from fastapi import APIRouter
+from typing import Annotated
+
+from fastapi import APIRouter, Depends
+
+from api.auth.auth_service import oauth2_scheme, AuthServiceDep
+from api.summary.summary_service import SummaryService, SummaryServiceDep
 
 router = APIRouter()
 
 
 @router.get("/user/history")
-def get_history():
-    return {
-        "user_id": "user_789",
-        "history": [
-            {
-                "file_id": "abc123",
-                "filename": "report.pdf",
-                "date": "2025-02-21",
-                "status": "completed"
-            },
-            {
-                "file_id": "xyz456",
-                "filename": "thesis.txt",
-                "date": "2025-02-18",
-                "status": "failed"
-            }
-        ]
-    }
+async def get_history(token: Annotated[str, Depends(oauth2_scheme)], auth_service: AuthServiceDep, summary_service: SummaryServiceDep):
+    user = await auth_service.get_current_user(token)
+    summaries = summary_service.get_all_user_summaries(user.id)
+    return summaries
