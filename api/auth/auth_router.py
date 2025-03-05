@@ -17,6 +17,7 @@ router = APIRouter(prefix="/auth")
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    is_admin: bool
 
 
 @router.post("/registration")
@@ -33,11 +34,16 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], auth_servi
     user = auth_service.login(user_login)
     if user is None:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+    is_admin = user.role_id == 1
+
     access_token_expires = timedelta(minutes=auth_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = auth_service.create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.username, "is_admin": is_admin},
+        expires_delta=access_token_expires
     )
-    return Token(access_token=access_token, token_type="bearer")
+
+    return Token(access_token=access_token, token_type="bearer", is_admin=is_admin)
 
 
 @router.post("/refresh")
