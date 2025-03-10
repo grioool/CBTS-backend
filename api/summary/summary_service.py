@@ -12,12 +12,13 @@ from api.summary.length import Length
 from api.summary.style import Style
 from api.summary.summary import Summary
 from config import ai_settings
+from config.storage_settings import storage_settings
 from db.config import SessionDep
 
 gemini_client = genai.Client(api_key=ai_settings.GEMINI_KEY)
 
 storage_client = storage.Client()
-bucket_name = "cbts-bucket"
+bucket_name = storage_settings.STORAGE_NAME
 bucket = storage_client.bucket(bucket_name)
 
 
