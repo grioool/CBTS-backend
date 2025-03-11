@@ -51,7 +51,7 @@ class SummaryService:
             user.counter_last_update = datetime.now()
 
         if user.summary_count <= 0:
-            raise HTTPException(status_code=429, detail="You have reached your daily summary limit.")
+            raise HTTPException(status_code=429, detail="You have reached your daily summary limit. Please, buy subscription :)")
 
         user.summary_count -= 1
         self.session.add(user)
