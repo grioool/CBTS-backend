@@ -43,7 +43,7 @@ class SummaryService:
     async def summarize_pdf(self, style: Style, length: Length, file: UploadFile, token: str):
         user = await self.auth_service.get_current_user(token)
 
-        if user.counter_last_update < date.today():
+        if user.counter_last_update is None or user.counter_last_update < date.today():
             user.summary_count = get_daily_limit_for_role(user.role_id)
             user.counter_last_update = date.today()
 
@@ -62,13 +62,12 @@ class SummaryService:
             contents=f"Summarize the following article {text} in the following style: {style} and length: {length}"
         )
         summary = response.text
+
         filename_hash = generate_hash(file.filename)
         destination_blob_name = f"summaries/{filename_hash}.txt"
         gcs_path = self.upload_text_to_gcs(summary, destination_blob_name)
 
-        user_id = (await self.auth_service.get_current_user(token)).id
-
-        db_summary = Summary(filename=file.filename, filename_hash=filename_hash, user_id=user_id)
+        db_summary = Summary(filename=file.filename, filename_hash=filename_hash, user_id=user.id)
         self.session.add(db_summary)
         self.session.commit()
         self.session.refresh(db_summary)
