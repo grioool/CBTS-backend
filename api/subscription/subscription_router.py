@@ -34,7 +34,7 @@ def create_subscription(request: SubscriptionRequest):
             }],
             mode="subscription",
             success_url="https://cbts-frontend.vercel.app/subscription/success",
-            cancel_url="https://cbts-frontend.vercel.app/subscription/cancel",
+            cancel_url="https://cbts-frontend.vercel.app/",
         )
 
         return SubscriptionResponse(stripeUrl=session.url)
