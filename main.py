@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import admin_router, auth_router, history_router, summary_router
+from api import admin_router, auth_router, history_router, summary_router, subscription_router
 from config.origins_settings import origins_settings
 from db.config import create_db_and_tables
 
@@ -22,6 +22,7 @@ app.include_router(summary_router)
 app.include_router(history_router)
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(subscription_router)
 
 origins = origins_settings.ALLOWED_ORIGINS.split(',')
 
