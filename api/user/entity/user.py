@@ -16,3 +16,4 @@ class User(SQLModel, table=True):
     password: str
     summary_count: int = Field(default=5)
     counter_last_update: datetime = Field(default=datetime.now())
+    role_id: int = Field(default=2, foreign_key="user_role.id")
