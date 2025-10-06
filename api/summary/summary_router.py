@@ -13,7 +13,7 @@ from api.summary.summary_service import SummaryServiceDep
 from config.storage_settings import storage_settings
 
 storage_client = storage.Client()
-bucket_name = storage_settings.bucket_name
+bucket_name = storage_settings.STORAGE_NAME
 bucket = storage_client.bucket(bucket_name)
 
 router = APIRouter(prefix="/summary")
