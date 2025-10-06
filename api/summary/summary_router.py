@@ -10,9 +10,10 @@ from api.auth.auth_service import oauth2_scheme
 from api.summary.length import Length
 from api.summary.style import Style
 from api.summary.summary_service import SummaryServiceDep
+from config.storage_settings import storage_settings
 
 storage_client = storage.Client()
-bucket_name = "cbts-bucket"
+bucket_name = storage_settings.bucket_name
 bucket = storage_client.bucket(bucket_name)
 
 router = APIRouter(prefix="/summary")
