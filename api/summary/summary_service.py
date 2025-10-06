@@ -1,6 +1,6 @@
 import hashlib
 from datetime import datetime, timedelta
-from typing import Annotated
+from typing import Annotated, Optional
 
 import fitz
 from fastapi import UploadFile, Depends, HTTPException
@@ -9,7 +9,6 @@ from google.cloud import storage
 from sqlmodel import select
 
 from api.auth.auth_service import AuthServiceDep
-from api.subscription.subscription_types import get_daily_limit_for_role
 from api.summary.length import Length
 from api.summary.style import Style
 from api.summary.summary import Summary
@@ -26,6 +25,17 @@ bucket = storage_client.bucket(bucket_name)
 
 def generate_hash(filename: str, length: int = 10):
     return hashlib.sha256(filename.encode()).hexdigest()[:length]
+
+
+def get_daily_limit_for_role(role_id: Optional[int]) -> int:
+    """
+    Return daily limits based ONLY on role_id.
+    2 -> 5/day
+    3 -> 50/day
+    4 -> 200/day
+    others -> 10/day (default)
+    """
+    return {2: 5, 3: 50, 4: 200}.get(role_id, 5)
 
 
 class SummaryService:
