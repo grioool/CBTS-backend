@@ -6,6 +6,9 @@ from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
 from api.auth.auth_service import AuthServiceDep, oauth2_scheme
+from api.auth.dto.password_reset_body import PasswordResetBody
+from api.auth.dto.password_reset_request import PasswordResetRequest
+from api.auth.password_reset_token import PasswordResetToken
 from api.user.dto.user_create import UserCreate
 from api.user.dto.user_login import UserLogin
 from api.user.dto.user_response import UserResponse
@@ -55,3 +58,14 @@ def refresh_token(token: Annotated[str, Depends(oauth2_scheme)], auth_service: A
 
     new_access_token = auth_service.create_access_token(data={"sub": username})
     return Token(access_token=new_access_token)
+
+@router.post("/password/forgot")
+def forgot(body: PasswordResetRequest, auth_service: AuthServiceDep):
+    auth_service.request_password_reset(body.email)
+    a = PasswordResetToken()
+    return {"message": "If that email exists, a reset link has been sent."}
+
+@router.post("/password/reset")
+def reset(body: PasswordResetBody, auth_service: AuthServiceDep):
+    auth_service.reset_password(body.token, body.new_password)
+    return {"message": "Password has been reset successfully."}

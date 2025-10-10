@@ -14,5 +14,11 @@ class UserService:
     def get_by_username(self, username: str) -> User:
         return self.session.exec(select(User).where(User.username == username)).first()
 
+    def get_by_email(self, email: str) -> User:
+        return self.session.exec(select(User).where(User.email == email)).first()
+
+    def get_by_id(self, id: int) -> User:
+        return self.session.exec(select(User).where(User.id == id)).first()
+
 
 UserServiceDep = Annotated[UserService, Depends(UserService)]

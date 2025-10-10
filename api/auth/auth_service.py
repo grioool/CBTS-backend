@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
@@ -8,6 +9,7 @@ from jwt import InvalidTokenError
 from passlib.context import CryptContext
 from sqlmodel import select, SQLModel
 
+from api.auth.password_reset_token import PasswordResetToken
 from api.user.dto.user_create import UserCreate
 from api.user.dto.user_login import UserLogin
 from api.user.entity.user import User
@@ -100,6 +102,33 @@ class AuthService:
         if user is None:
             raise credentials_exception
         return user
+
+    def request_password_reset(self, email: str):
+        db_user = self.user_service.get_by_email(email)
+        if not db_user:
+            return None
+        token = PasswordResetToken(token=uuid.uuid4(), user_id=db_user.id, expires_at=datetime.now(timezone.utc)+timedelta(minutes=15))
+        self.session.add(token)
+        self.session.commit()
+        self.session.refresh(token)
+
+    def reset_password(self, token: str, new_password: str):
+        db_token: PasswordResetToken = self.session.exec(select(PasswordResetToken).where(PasswordResetToken.token == token)).first()
+        if not db_token or datetime.now(timezone.utc) > db_token.expires_at.now(timezone.utc) or db_token.used:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        db_user = self.user_service.get_by_id(db_token.user_id)
+        if not db_user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+        db_user.password = self.get_password_hash(new_password)
+        db_token.used = True
+        self.session.commit()
+        self.session.refresh(db_user)
+        return db_user
 
 
 AuthServiceDep = Annotated[AuthService, Depends(AuthService)]
