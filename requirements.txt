@@ -89,5 +89,5 @@ uvloop==0.21.0
 watchfiles==1.0.4
 websockets==14.2
 yarl==1.18.3
-
+aiosmtplib==4.0.2
 stripe~=11.6.0

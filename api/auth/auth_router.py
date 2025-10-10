@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
@@ -60,9 +60,8 @@ def refresh_token(token: Annotated[str, Depends(oauth2_scheme)], auth_service: A
     return Token(access_token=new_access_token)
 
 @router.post("/password/forgot")
-def forgot(body: PasswordResetRequest, auth_service: AuthServiceDep):
-    auth_service.request_password_reset(body.email)
-    a = PasswordResetToken()
+def forgot(body: PasswordResetRequest, auth_service: AuthServiceDep, background_tasks: BackgroundTasks):
+    auth_service.request_password_reset(body.email, background_tasks)
     return {"message": "If that email exists, a reset link has been sent."}
 
 @router.post("/password/reset")

@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 import jwt
-from fastapi import HTTPException, status, Depends
+from fastapi import HTTPException, status, Depends, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError
 from passlib.context import CryptContext
@@ -14,6 +14,7 @@ from api.user.dto.user_create import UserCreate
 from api.user.dto.user_login import UserLogin
 from api.user.entity.user import User
 from api.user.user_service import UserServiceDep
+from api.utils.emailer import send_email, send_email_async
 from config import auth_settings
 from db.config import SessionDep
 
@@ -53,7 +54,7 @@ class AuthService:
         db_user = self.user_service.get_by_username(user.username)
         if not db_user:
             return None
-        if not self.verify_password(user.password, self.get_password_hash(user.password)):
+        if not self.verify_password(user.password, db_user.password):
             return None
         return db_user
 
@@ -103,7 +104,7 @@ class AuthService:
             raise credentials_exception
         return user
 
-    def request_password_reset(self, email: str):
+    def request_password_reset(self, email: str, background_tasks: BackgroundTasks):
         db_user = self.user_service.get_by_email(email)
         if not db_user:
             return None
@@ -111,6 +112,13 @@ class AuthService:
         self.session.add(token)
         self.session.commit()
         self.session.refresh(token)
+        html = f"""
+            <div style="font-family: sans-serif">
+              <p>Click the link to reset your password:</p>
+              <p><a href="{auth_settings.FORGOT_PASSWORD_URL}?token={token.token}">Reset Password</a></p>
+            </div>
+            """
+        background_tasks.add_task(send_email, email, "Reset your password", html)
 
     def reset_password(self, token: str, new_password: str):
         db_token: PasswordResetToken = self.session.exec(select(PasswordResetToken).where(PasswordResetToken.token == token)).first()
