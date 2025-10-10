@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
+
 
 
 class UserRole(SQLModel, table=True):
@@ -17,3 +18,4 @@ class User(SQLModel, table=True):
     summary_count: int = Field(default=5)
     counter_last_update: datetime = Field(default=datetime.now())
     role_id: int = Field(default=2, foreign_key="user_role.id")
+    notes: list["Note"] = Relationship(back_populates="user")
