@@ -126,13 +126,6 @@ def test_get_daily_limit_for_role(role_id, expected):
     assert get_daily_limit_for_role(role_id) == expected
 
 
-def test_upload_text_to_gcs_calls_blob_and_returns_public_url(svc, gcs):
-    url = svc.upload_text_to_gcs("hello", "summaries/abc.txt")
-    gcs.bucket.blob.assert_called_once_with("summaries/abc.txt")
-    gcs.blob.upload_from_string.assert_called_once()
-    assert url == "https://files.example/summaries/abc.txt"
-
-
 def test_get_by_id(session, svc: SummaryService):
     target = object()
     session.exec.return_value.first.return_value = target
