@@ -5,6 +5,7 @@ on: [push, pull_request]
 jobs:
   tests:
     runs-on: ubuntu-latest
+    environment: CBTS-env
     env:
       GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
       DB_USER: ${{ secrets.DB_USER }}
