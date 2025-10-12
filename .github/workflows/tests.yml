@@ -14,7 +14,6 @@ jobs:
       STORAGE_NAME: ${{ secrets.STORAGE_NAME }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGORITHM: ${{ secrets.ALGORITHM }}
-      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
       ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
       FORGOT_PASSWORD_URL: ${{ secrets.FORGOT_PASSWORD_URL }}
       STRIPE_ID: ${{ secrets.STRIPE_ID }}
