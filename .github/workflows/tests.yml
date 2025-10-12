@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   tests:
     runs-on: ubuntu-latest
+    env:
+      GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
