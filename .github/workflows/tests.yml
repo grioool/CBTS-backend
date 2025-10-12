@@ -8,6 +8,17 @@ jobs:
     env:
       GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
       DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_IP: ${{ secrets.DB_IP }}
+      STORAGE_NAME: ${{ secrets.STORAGE_NAME }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
+      ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
+      FORGOT_PASSWORD_URL: ${{ secrets.FORGOT_PASSWORD_URL }}
+      STRIPE_ID: ${{ secrets.STRIPE_ID }}
+      PRICE_ID_PREMIUM: ${{ secrets.PRICE_ID_PREMIUM }}
+      PRICE_ID_ENTERPRISE: ${{ secrets.PRICE_ID_ENTERPRISE }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
