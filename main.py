@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from api import admin_router, auth_router, history_router, summary_router, subscription_router, note_router
 from config.origins_settings import origins_settings
 from db.config import create_db_and_tables
+from fastapi.testclient import TestClient
 
 app = FastAPI()
 
@@ -35,3 +36,5 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+client = TestClient(app)
